@@ -1,10 +1,10 @@
 {
-  "name": "ゆめかわHTMLエディタ",
-  "short_name": "HTMLエディタ",
-  "start_url": "./index.html",
+  "name": "HTML Live Editor",
+  "short_name": "HTML Editor",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#f9f4ff",
-  "theme_color": "#bf7fff",
+  "background_color": "#ffffff",
+  "theme_color": "#667eea",
   "icons": [
     {
       "src": "icon.png",
