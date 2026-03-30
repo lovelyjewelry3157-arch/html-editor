@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head><link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#bf7fff"
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ゆめかわHTMLエディタ</title>
+
+<style>
+:root {
+  --main: #bf7fff;
+  --accent1: #ffed7e;
+  --accent2: #fb92ff;
+  --bg: #f9f4ff;
+}
+
+body {
+  margin: 0;
+  font-family: "Hiragino Maru Gothic ProN", sans-serif;
+  background: linear-gradient(135deg, var(--main), var(--accent2));
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: var(--main);
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.toolbar {
+  position: fixed;
+  top: 50px;
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding: 8px;
+  flex-wrap: wrap;
+}
+
+.button {
+  background: var(--accent1);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.container {
+  display: flex;
+  margin-top: 110px;
+  height: calc(100vh - 110px);
+}
+
+textarea {
+  width: 50%;
+  padding: 15px;
+  border: none;
+  outline: none;
+  resize: none;
+  background: var(--bg);
+}
+
+iframe {
+  width: 50%;
+  border: none;
+  background: white;
+}
+
+/* コードパネル */
+.snippets {
+  position: fixed;
+  right: 10px;
+  top: 120px;
+  width: 220px;
+  background: white;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  display: none;
+}
+
+.snippets button {
+  width: 100%;
+  margin: 4px 0;
+  border: none;
+  padding: 6px;
+  border-radius: 8px;
+  background: var(--accent2);
+  color: white;
+  cursor: pointer;
+}
+
+/* スマホ */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  textarea, iframe {
+    width: 100%;
+    height: 50%;
+  }
+
+  .snippets {
+    width: 90%;
+    right: 5%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">💜 ゆめかわHTMLエディタ 💛</div>
+
+<div class="toolbar">
+  <button class="button" onclick="saveLocal()">💾 保存</button>
+  <button class="button" onclick="loadLocal()">📂 読み込み</button>
+  <button class="button" onclick="downloadHTML()">⬇️ DL</button>
+
+  <!-- ①アップロード -->
+  <input type="file" id="fileInput" style="display:none" accept=".html">
+  <button class="button" onclick="document.getElementById('fileInput').click()">📁 開く</button>
+
+  <!-- ②コード一覧 -->
+  <button class="button" onclick="toggleSnippets()">📚 コード</button>
+</div>
+
+<div class="container">
+  <textarea id="editor"></textarea>
+  <iframe id="preview"></iframe>
+</div>
+
+<!-- コード一覧 -->
+<div class="snippets" id="snippets">
+  <button onclick="insertCode('<h1>見出し</h1>')">見出し</button>
+  <button onclick="insertCode('<p>段落</p>')">段落</button>
+  <button onclick="insertCode('<a href=\"\">リンク</a>')">リンク</button>
+  <button onclick="insertCode('<img src=\"\" alt=\"\">')">画像</button>
+  <button onclick="insertCode('<button>ボタン</button>')">ボタン</button>
+  <button onclick="insertCode('<div style=\"color:red;\">赤文字</div>')">色付き</button>
+</div>
+
+<script>
+const editor = document.getElementById("editor");
+const preview = document.getElementById("preview");
+if("serviceWorker" in navigator){
+  navigatoer.serviceWorker.register("se.js");
+}
+
+// プレビュー
+function updatePreview() {
+  preview.srcdoc = editor.value;
+}
+editor.addEventListener("input", updatePreview);
+
+// 保存
+function saveLocal() {
+  localStorage.setItem("htmlData", editor.value);
+  alert("保存したよ✨");
+}
+
+// 読み込み
+function loadLocal() {
+  const data = localStorage.getItem("htmlData");
+  if (data) {
+    editor.value = data;
+    updatePreview();
+  }
+}
+
+// ダウンロード
+function downloadHTML() {
+  const blob = new Blob([editor.value], { type: "text/html" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "my_page.html";
+  a.click();
+}
+
+// ①ファイルアップロード
+document.getElementById("fileInput").addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    editor.value = event.target.result;
+    updatePreview();
+  };
+  reader.readAsText(file);
+});
+
+// ②コード挿入
+function insertCode(code) {
+  editor.value += "\n" + code;
+  updatePreview();
+}
+
+// パネル表示
+function toggleSnippets() {
+  const panel = document.getElementById("snippets");
+  panel.style.display = panel.style.display === "block" ? "none" : "block";
+}
+
+// 初期
+editor.value = `<h1 style="color:#bf7fff;">完成度上がってきた💜</h1>`;
+updatePreview();
+</script>
+
+</body>
+</html>

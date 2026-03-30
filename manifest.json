@@ -1,0 +1,15 @@
+{
+  "name": "ゆめかわHTMLエディタ",
+  "short_name": "HTMLエディタ",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f9f4ff",
+  "theme_color": "#bf7fff",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
