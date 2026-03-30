@@ -48,6 +48,8 @@ textarea { width: 100%; height: 100%; border: none; outline: none; resize: none;
         <textarea id="editor" spellcheck="false"><!DOCTYPE html>
 <html lang="ja">
 <head>
+  <link rel="manifest" href=manifest.json">
+  <meta name="theme-color" content="#667eea">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
@@ -199,4 +201,8 @@ function copyCode() {
 }
 
 updatePreview();
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('service-worker.js')
+  .then(() => console.log('Service Worker Registrerd'));
+}
 </script>
